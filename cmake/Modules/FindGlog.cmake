@@ -11,17 +11,16 @@
 
 include(FindPackageHandleStandardArgs)
 
-set(GLOG_ROOT_DIR "" CACHE PATH "Folder contains Google glog")
 
 find_path(GLOG_INCLUDE_DIR glog/logging.h
-    PATHS ${GLOG_ROOT_DIR})
+    PATHS ${GLOG_ROOT_DIR}
+    PATH_SUFFIXES include)
 
 if(MSVC)
-    # rely on glog-config.cmake
-    find_package(glog NO_MODULE)
-
-    set(GLOG_LIBRARY ${glog_LIBRARIES})
-    set(GLOG_INCLUDE_DIR ${glog_INCLUDE_DIRS})
+    find_library(GLOG_LIBRARY 
+        NAMES glog
+        PATHS ${GLOG_ROOT_DIR}
+        PATH_SUFFIXES lib)
 else()
     find_library(GLOG_LIBRARY glog
         PATHS ${GLOG_ROOT_DIR}

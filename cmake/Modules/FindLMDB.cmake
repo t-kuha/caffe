@@ -13,7 +13,8 @@
 # Aug 31, 2013
 
 if(MSVC)
-  find_package(LMDB NO_MODULE)
+  find_path(LMDB_INCLUDE_DIR NAMES  lmdb.h PATHS "${LMDB_DIR}/include")
+  find_library(LMDB_LIBRARIES NAMES liblmdb   PATHS "${LMDB_DIR}/lib" )
 else()
   find_path(LMDB_INCLUDE_DIR NAMES  lmdb.h PATHS "$ENV{LMDB_DIR}/include")
   find_library(LMDB_LIBRARIES NAMES lmdb   PATHS "$ENV{LMDB_DIR}/lib" )

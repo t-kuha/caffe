@@ -6,9 +6,15 @@
 
 # Look for the header file.
 if(MSVC)
-  find_package(LevelDB NO_MODULE)
-  set(LevelDB_INCLUDE ${LevelDB_INCLUDE_DIRS})
-  set(LevelDB_LIBRARY ${LevelDB_LIBRARIES})
+  find_path(LevelDB_INCLUDE NAMES leveldb/db.h
+  PATHS ${LEVELDB_ROOT}/include
+  DOC "Path in which the file leveldb/db.h is located." )
+
+  # Look for the library.
+  find_library(LevelDB_LIBRARY NAMES leveldb
+    PATHS ${LEVELDB_ROOT}/lib
+    DOC "Path to leveldb library." )
+
 else()
   find_path(LevelDB_INCLUDE NAMES leveldb/db.h
                             PATHS $ENV{LEVELDB_ROOT}/include /opt/local/include /usr/local/include /usr/include

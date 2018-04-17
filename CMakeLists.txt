@@ -47,7 +47,6 @@ else()
   caffe_option(BUILD_SHARED_LIBS "Build shared libraries" ON)
 endif()
 caffe_option(BUILD_python "Build Python wrapper" ON)
-set(python_version "2" CACHE STRING "Specify which Python version to use")
 caffe_option(BUILD_matlab "Build Matlab wrapper" OFF)
 caffe_option(BUILD_docs   "Build documentation" ON IF UNIX OR APPLE)
 caffe_option(BUILD_python_layer "Build the Caffe Python layer" ON)
@@ -73,8 +72,9 @@ if(MSVC AND BUILD_SHARED_LIBS)
   message(WARNING "Some tests (solvers) will fail when building as a shared library with MSVC")
 endif()
 
-# ---[ Prebuild dependencies on windows
-include(cmake/WindowsDownloadPrebuiltDependencies.cmake)
+if(WIN32)
+    add_definitions(/DGOOGLE_GLOG_DLL_DECL=)
+endif()
 
 # ---[ Dependencies
 include(cmake/Dependencies.cmake)

@@ -380,3 +380,28 @@ function(caffe_detect_darwin_version output_var)
     set(${output_var} "" PARENT_SCOPE)
   endif()
 endfunction()
+
+#-----------------------------------------------------------------------------
+# Option to Build with Static CRT libraries on Windows
+#-------------------------------------------------------------------------------
+MACRO (TARGET_STATIC_CRT_FLAGS)
+  if (MSVC AND NOT BUILD_SHARED_LIBS)
+    foreach (flag_var
+        CMAKE_C_FLAGS CMAKE_C_FLAGS_DEBUG CMAKE_C_FLAGS_RELEASE
+        CMAKE_C_FLAGS_MINSIZEREL CMAKE_C_FLAGS_RELWITHDEBINFO
+        CMAKE_CXX_FLAGS CMAKE_CXX_FLAGS_DEBUG CMAKE_CXX_FLAGS_RELEASE
+        CMAKE_CXX_FLAGS_MINSIZEREL CMAKE_CXX_FLAGS_RELWITHDEBINFO)
+      if (${flag_var} MATCHES "/MD")
+        string (REGEX REPLACE "/MD" "/MT" ${flag_var} "${${flag_var}}")
+      endif (${flag_var} MATCHES "/MD")
+    endforeach (flag_var)
+
+    set (WIN_COMPILE_FLAGS "")
+  endif (MSVC AND NOT BUILD_SHARED_LIBS)
+ENDMACRO (TARGET_STATIC_CRT_FLAGS)
+
+#-----------------------------------------------------------------------------
+option (BUILD_STATIC_CRT_LIBS "Build With Static CRT Libraries" OFF)
+if (BUILD_STATIC_CRT_LIBS)
+  TARGET_STATIC_CRT_FLAGS ()
+endif (BUILD_STATIC_CRT_LIBS)
