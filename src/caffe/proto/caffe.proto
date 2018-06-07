@@ -633,9 +633,6 @@ message ConvolutionParameter {
   // implementation; for input blobs with num_axes != 2, this option is
   // ignored and the ND implementation will be used.)
   optional bool force_nd_im2col = 17 [default = false];
-  
-  optional bool sq = 19 [default = false]; // whether to quantize the weights by stochastic quantization algorithm
-  optional float ratio = 20 [default = 100]; // quantization ratio
 }
 
 message CropParameter {
@@ -851,9 +848,6 @@ message InnerProductParameter {
   // of the weight matrix. The weight matrix itself is not going to be transposed
   // but rather the transfer flag of operations will be toggled accordingly.
   optional bool transpose = 6 [default = false];
-  
-  optional bool sq = 7 [default = false]; // whether to quantize the weights by stochastic quantization algorithm
-  optional float ratio = 8 [default = 100]; // quantization ratio
 }
 
 message InputParameter {
