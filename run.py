@@ -1,6 +1,5 @@
 import os
 
-os.environ["DYLD_LIBRARY_PATH"] = "/Users/kuriharat/Documents/GitHub/Incremental-Network-Quantization/build/lib"
 
 print("First partition and run")
 
