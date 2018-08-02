@@ -13,6 +13,9 @@
 #include <string>
 #include <utility>
 #include <vector>
+#include <iostream>
+#include <sstream>
+#include <iomanip>
 
 #include "boost/scoped_ptr.hpp"
 #include "boost/thread.hpp"
@@ -64,8 +67,8 @@ public:
     m_barrier_read(threads), m_barrier_fetch(2),
     m_id(0), m_thd_done(0),
     m_done(false),
-    m_encode_type(encode_type),
     m_root_folder(root_folder),
+    m_encode_type(encode_type),
     m_resize_height(resize_height), m_resize_width(resize_width),
     m_is_color(is_color)
   {
@@ -200,8 +203,6 @@ int main(int argc, char** argv) {
   // Storing to db
   std::string root_folder(argv[1]);
   int count = 0;
-  const int kMaxKeyLength = 256;
-  char key_cstr[kMaxKeyLength];
   int data_size = 0;
   bool data_size_initialized = false;
 
@@ -227,13 +228,14 @@ int main(int argc, char** argv) {
         }
 
         // sequential
-        int length = sprintf_s(key_cstr, kMaxKeyLength, "%08d_%s", vec[i].line_id,
-          lines[vec[i].line_id].first.c_str());
-
+        string key_str;
+        stringstream o;
+        o << std::setfill('0') << std::setw(8) << vec[i].line_id;
+        key_str = o.str() + "_" + lines[vec[i].line_id].first;
         // Put in db
         string out;
         CHECK(vec[i].datum.SerializeToString(&out));
-        txn->Put(string(key_cstr, length), out);
+        txn->Put(key_str, out);
 
         if (++count % 1000 == 0) {
           // Commit db
@@ -273,13 +275,14 @@ int main(int argc, char** argv) {
         }
       }
       // sequential
-      int length = sprintf_s(key_cstr, kMaxKeyLength, "%08d_%s", line_id,
-        lines[line_id].first.c_str());
-
-      // Put in db
-      string out;
-      CHECK(datum.SerializeToString(&out));
-      txn->Put(string(key_cstr, length), out);
+        string key_str;
+        stringstream o;
+        o << std::setfill('0') << std::setw(8) << line_id;
+        key_str = o.str() + "_" + lines[line_id].first.c_str();
+        // Put in db
+        string out;
+        CHECK(datum.SerializeToString(&out));
+        txn->Put(key_str, out);
 
       if (++count % 1000 == 0) {
         // Commit db
