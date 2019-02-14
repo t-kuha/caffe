@@ -95,3 +95,8 @@ LOCK
 LOG*
 CURRENT
 MANIFEST-*
+
+# SDSoC
+_sds
+sd_card
+
