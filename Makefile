@@ -656,6 +656,8 @@ clean:
 	@- $(RM) -rf $(DISTRIBUTE_DIR)
 	@- $(RM) $(PY$(PROJECT)_SO)
 	@- $(RM) $(MAT$(PROJECT)_SO)
+	@- $(RM) -rf _sds
+	@- $(RM) -rf sd_card
 
 supercleanfiles:
 	$(eval SUPERCLEAN_FILES := $(strip \
