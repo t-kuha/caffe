@@ -13,5 +13,5 @@ weight_decay: 0.0005
 snapshot: 10000
 snapshot_prefix: "examples/mnist/mnist_autoencoder_adagrad_train"
 # solver mode: CPU or GPU
-solver_mode: GPU
+solver_mode: CPU
 type: "AdaGrad"
