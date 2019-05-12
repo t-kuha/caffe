@@ -387,10 +387,14 @@ bool UpgradeV0LayerParameter(const V1LayerParameter& v0_layer_connection,
     if (v0_layer_param.has_source()) {
       if (type == "data") {
         layer_param->mutable_data_param()->set_source(v0_layer_param.source());
-      } else if (type == "hdf5_data") {
+      } 
+#ifdef USE_HDF5
+      else if (type == "hdf5_data") {
         layer_param->mutable_hdf5_data_param()->set_source(
             v0_layer_param.source());
-      } else if (type == "images") {
+      } 
+#endif
+      else if (type == "images") {
         layer_param->mutable_image_data_param()->set_source(
             v0_layer_param.source());
       } else if (type == "window_data") {
@@ -416,10 +420,14 @@ bool UpgradeV0LayerParameter(const V1LayerParameter& v0_layer_connection,
       if (type == "data") {
         layer_param->mutable_data_param()->set_batch_size(
             v0_layer_param.batchsize());
-      } else if (type == "hdf5_data") {
+      } 
+#ifdef USE_HDF5
+      else if (type == "hdf5_data") {
         layer_param->mutable_hdf5_data_param()->set_batch_size(
             v0_layer_param.batchsize());
-      } else if (type == "images") {
+      } 
+#endif
+      else if (type == "images") {
         layer_param->mutable_image_data_param()->set_batch_size(
             v0_layer_param.batchsize());
       } else if (type == "window_data") {
@@ -536,6 +544,7 @@ bool UpgradeV0LayerParameter(const V1LayerParameter& v0_layer_connection,
         is_fully_compatible = false;
       }
     }
+#ifdef USE_HDF5
     if (v0_layer_param.has_hdf5_output_param()) {
       if (type == "hdf5_output") {
         layer_param->mutable_hdf5_output_param()->CopyFrom(
@@ -546,6 +555,7 @@ bool UpgradeV0LayerParameter(const V1LayerParameter& v0_layer_connection,
         is_fully_compatible = false;
       }
     }
+#endif
   }
   return is_fully_compatible;
 }
@@ -567,11 +577,15 @@ V1LayerParameter_LayerType UpgradeV0LayerType(const string& type) {
     return V1LayerParameter_LayerType_EUCLIDEAN_LOSS;
   } else if (type == "flatten") {
     return V1LayerParameter_LayerType_FLATTEN;
-  } else if (type == "hdf5_data") {
+  } 
+#ifdef USE_HDF5
+  else if (type == "hdf5_data") {
     return V1LayerParameter_LayerType_HDF5_DATA;
   } else if (type == "hdf5_output") {
     return V1LayerParameter_LayerType_HDF5_OUTPUT;
-  } else if (type == "im2col") {
+  } 
+#endif
+  else if (type == "im2col") {
     return V1LayerParameter_LayerType_IM2COL;
   } else if (type == "images") {
     return V1LayerParameter_LayerType_IMAGE_DATA;
@@ -786,6 +800,7 @@ bool UpgradeV1LayerParameter(const V1LayerParameter& v1_layer_param,
     layer_param->mutable_exp_param()->CopyFrom(
         v1_layer_param.exp_param());
   }
+#ifdef USE_HDF5
   if (v1_layer_param.has_hdf5_data_param()) {
     layer_param->mutable_hdf5_data_param()->CopyFrom(
         v1_layer_param.hdf5_data_param());
@@ -794,6 +809,7 @@ bool UpgradeV1LayerParameter(const V1LayerParameter& v1_layer_param,
     layer_param->mutable_hdf5_output_param()->CopyFrom(
         v1_layer_param.hdf5_output_param());
   }
+#endif
   if (v1_layer_param.has_hinge_loss_param()) {
     layer_param->mutable_hinge_loss_param()->CopyFrom(
         v1_layer_param.hinge_loss_param());
@@ -907,10 +923,12 @@ const char* UpgradeV1LayerType(const V1LayerParameter_LayerType type) {
     return "Exp";
   case V1LayerParameter_LayerType_FLATTEN:
     return "Flatten";
+#ifdef USE_HDF5
   case V1LayerParameter_LayerType_HDF5_DATA:
     return "HDF5Data";
   case V1LayerParameter_LayerType_HDF5_OUTPUT:
     return "HDF5Output";
+#endif
   case V1LayerParameter_LayerType_HINGE_LOSS:
     return "HingeLoss";
   case V1LayerParameter_LayerType_IM2COL:

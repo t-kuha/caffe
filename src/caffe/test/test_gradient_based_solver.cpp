@@ -90,6 +90,7 @@ class GradientBasedSolverTest : public MultiDeviceTest<TypeParam> {
        "layer_wise_reduce: " << (!share_) << " "
        "net_param { "
        "  name: 'TestNetwork' "
+// #ifdef USE_HDF5
        "  layer { "
        "    name: 'data' "
        "    type: 'HDF5Data' "
@@ -99,7 +100,24 @@ class GradientBasedSolverTest : public MultiDeviceTest<TypeParam> {
        "    } "
        "    top: 'data' "
        "    top: 'targets' "
-       "  } ";
+       "  } "
+// #else
+//        "  layer { "
+//        "    name: 'data' "
+//        "    type: 'DummyData' "
+//        "    dummy_data_param { "
+//        "      num: " << 1200 << " "
+//        "      channels: 1 "
+//        "      height: 1 "
+//        "      width: 1 "
+//        "      data_filler { type: \"gaussian\" std: 1 } "
+//        "      data_filler { type: \"constant\" } "
+//        "    } "
+//        "    top: 'data' "
+//        "    top: 'targets' "
+//        "  } "
+// #endif       
+       ;
     if (share_) {
       proto <<
          "  layer { "
@@ -595,6 +613,7 @@ class SGDSolverTest : public GradientBasedSolverTest<TypeParam> {
 
 TYPED_TEST_CASE(SGDSolverTest, TestDtypesAndDevices);
 
+#ifdef USE_HDF5
 TYPED_TEST(SGDSolverTest, TestLeastSquaresUpdate) {
   this->TestLeastSquaresUpdate();
 }
@@ -717,6 +736,7 @@ TYPED_TEST(SGDSolverTest, TestSnapshotShare) {
     this->TestSnapshot(kLearningRate, kWeightDecay, kMomentum, i);
   }
 }
+#endif
 
 
 template <typename TypeParam>
@@ -731,6 +751,7 @@ class AdaGradSolverTest : public GradientBasedSolverTest<TypeParam> {
 
 TYPED_TEST_CASE(AdaGradSolverTest, TestDtypesAndDevices);
 
+#ifdef USE_HDF5
 TYPED_TEST(AdaGradSolverTest, TestAdaGradLeastSquaresUpdate) {
   this->TestLeastSquaresUpdate();
 }
@@ -817,6 +838,7 @@ TYPED_TEST(AdaGradSolverTest, TestSnapshotShare) {
     this->TestSnapshot(kLearningRate, kWeightDecay, kMomentum, i);
   }
 }
+#endif
 
 
 template <typename TypeParam>
@@ -831,6 +853,7 @@ class NesterovSolverTest : public GradientBasedSolverTest<TypeParam> {
 
 TYPED_TEST_CASE(NesterovSolverTest, TestDtypesAndDevices);
 
+#ifdef USE_HDF5
 TYPED_TEST(NesterovSolverTest, TestNesterovLeastSquaresUpdate) {
   this->TestLeastSquaresUpdate();
 }
@@ -951,6 +974,7 @@ TYPED_TEST(NesterovSolverTest, TestSnapshotShare) {
     this->TestSnapshot(kLearningRate, kWeightDecay, kMomentum, i);
   }
 }
+#endif
 
 template <typename TypeParam>
 class AdaDeltaSolverTest : public GradientBasedSolverTest<TypeParam> {
@@ -964,6 +988,7 @@ class AdaDeltaSolverTest : public GradientBasedSolverTest<TypeParam> {
 
 TYPED_TEST_CASE(AdaDeltaSolverTest, TestDtypesAndDevices);
 
+#ifdef USE_HDF5
 TYPED_TEST(AdaDeltaSolverTest, TestAdaDeltaLeastSquaresUpdate) {
   typedef typename TypeParam::Dtype Dtype;
   const Dtype kLearningRate = 0.1;
@@ -1080,6 +1105,7 @@ TYPED_TEST(AdaDeltaSolverTest, TestSnapshotShare) {
     this->TestSnapshot(kLearningRate, kWeightDecay, kMomentum, i);
   }
 }
+#endif
 
 template <typename TypeParam>
 class AdamSolverTest : public GradientBasedSolverTest<TypeParam> {
@@ -1098,6 +1124,7 @@ class AdamSolverTest : public GradientBasedSolverTest<TypeParam> {
 
 TYPED_TEST_CASE(AdamSolverTest, TestDtypesAndDevices);
 
+#ifdef USE_HDF5
 TYPED_TEST(AdamSolverTest, TestAdamLeastSquaresUpdate) {
   typedef typename TypeParam::Dtype Dtype;
   const Dtype kLearningRate = 0.01;
@@ -1182,6 +1209,7 @@ TYPED_TEST(AdamSolverTest, TestSnapshotShare) {
     this->TestSnapshot(kLearningRate, kWeightDecay, kMomentum, i);
   }
 }
+#endif
 
 template <typename TypeParam>
 class RMSPropSolverTest : public GradientBasedSolverTest<TypeParam> {
@@ -1198,6 +1226,7 @@ class RMSPropSolverTest : public GradientBasedSolverTest<TypeParam> {
 
 TYPED_TEST_CASE(RMSPropSolverTest, TestDtypesAndDevices);
 
+#ifdef USE_HDF5
 TYPED_TEST(RMSPropSolverTest, TestRMSPropLeastSquaresUpdateWithWeightDecay) {
   typedef typename TypeParam::Dtype Dtype;
   const Dtype kLearningRate = 1.0;
@@ -1285,5 +1314,6 @@ TYPED_TEST(RMSPropSolverTest, TestSnapshotShare) {
     this->TestSnapshot(kLearningRate, kWeightDecay, kMomentum, i);
   }
 }
+#endif
 
 }  // namespace caffe

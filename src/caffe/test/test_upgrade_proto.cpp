@@ -1409,6 +1409,7 @@ TEST_F(NetUpgradeTest, TestAllParams) {
       "  top: 'window_data' "
       "  top: 'window_label' "
       "} "
+#ifdef USE_HDF5
       "layers { "
       "  layer { "
       "    name: 'hdf5data' "
@@ -1418,6 +1419,7 @@ TEST_F(NetUpgradeTest, TestAllParams) {
       "  } "
       "  top: 'hdf5data' "
       "} "
+#endif
       "layers { "
       "  layer { "
       "    name: 'conv1' "
@@ -1558,6 +1560,7 @@ TEST_F(NetUpgradeTest, TestAllParams) {
       "    type: 'flatten' "
       "  } "
       "} "
+#ifdef USE_HDF5
       "layers { "
       "  layer { "
       "    name: 'hdf5_output' "
@@ -1567,6 +1570,7 @@ TEST_F(NetUpgradeTest, TestAllParams) {
       "    } "
       "  } "
       "} "
+#endif
       "layers { "
       "  layer { "
       "    name: 'im2col' "
@@ -1673,6 +1677,7 @@ TEST_F(NetUpgradeTest, TestAllParams) {
       "  top: 'window_data' "
       "  top: 'window_label' "
       "} "
+#ifdef USE_HDF5
       "layers { "
       "  name: 'hdf5data' "
       "  type: HDF5_DATA "
@@ -1682,6 +1687,7 @@ TEST_F(NetUpgradeTest, TestAllParams) {
       "  } "
       "  top: 'hdf5data' "
       "} "
+#endif
       "layers { "
       "  name: 'conv1' "
       "  type: CONVOLUTION "
@@ -1812,6 +1818,7 @@ TEST_F(NetUpgradeTest, TestAllParams) {
       "  name: 'flatten' "
       "  type: FLATTEN "
       "} "
+#ifdef USE_HDF5
       "layers { "
       "  name: 'hdf5_output' "
       "  type: HDF5_OUTPUT "
@@ -1819,6 +1826,7 @@ TEST_F(NetUpgradeTest, TestAllParams) {
       "    file_name: '/my/hdf5/output/file' "
       "  } "
       "} "
+#endif
       "layers { "
       "  name: 'im2col' "
       "  type: IM2COL "
@@ -2897,6 +2905,12 @@ TEST_F(NetUpgradeTest, TestUpgradeV1LayerType) {
   for (int i = 0; i < V1LayerParameter_LayerType_LayerType_ARRAYSIZE; ++i) {
     ASSERT_TRUE(V1LayerParameter_LayerType_IsValid(i));
     V1LayerParameter_LayerType v1_type = V1LayerParameter_LayerType(i);
+#ifndef USE_HDF5
+    if (v1_type == V1LayerParameter_LayerType_HDF5_DATA || 
+          v1_type == V1LayerParameter_LayerType_HDF5_OUTPUT) {
+      continue;
+    }
+#endif    
     string v2_layer_type(UpgradeV1LayerType(v1_type));
     if (v2_layer_type == "") {
       EXPECT_EQ(V1LayerParameter_LayerType_NONE, v1_type);
