@@ -13,6 +13,7 @@ from caffe.proto import caffe_pb2
 from google import protobuf
 import re
 import argparse
+import os
 
 # ANSI codes for coloring blobs (used cyclically)
 COLORS = ['92', '93', '94', '95', '97', '96', '42', '43;30', '100',
@@ -58,7 +59,7 @@ def print_table(table, max_width):
             right_col += width
             row_str += cell + ' '
             row_str += ' ' * max(right_col - printed_len(row_str), 0)
-        print row_str
+        print(row_str)
 
 def summarize_net(net):
     disconnected_tops = set()
@@ -72,17 +73,24 @@ def summarize_net(net):
         tops = []
         for ind, top in enumerate(lr.top):
             color = colors.setdefault(top, COLORS[len(colors) % len(COLORS)])
-            if top in disconnected_tops:
-                top = '\033[1;4m' + top
+            if not os.name == "nt":
+                if top in disconnected_tops:
+                    top = '\033[1;4m' + top
             if len(lr.loss_weight) > 0:
                 top = '{} * {}'.format(lr.loss_weight[ind], top)
-            tops.append('\033[{}m{}\033[0m'.format(color, top))
+            if os.name == "nt":
+                tops.append(top)
+            else:
+                tops.append('\033[{}m{}\033[0m'.format(color, top))
         top_str = ', '.join(tops)
 
         bottoms = []
         for bottom in lr.bottom:
             color = colors.get(bottom, DISCONNECTED_COLOR)
-            bottoms.append('\033[{}m{}\033[0m'.format(color, bottom))
+            if os.name == "nt":
+                bottoms.append(bottom)
+            else:
+                bottoms.append('\033[{}m{}\033[0m'.format(color, bottom))
         bottom_str = ', '.join(bottoms)
 
         if lr.type == 'Python':

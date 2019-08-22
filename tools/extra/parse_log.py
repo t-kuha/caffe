@@ -166,13 +166,13 @@ def write_csv(output_filename, dict_list, delimiter, verbose=False):
     dialect = csv.excel
     dialect.delimiter = delimiter
 
-    with open(output_filename, 'w') as f:
+    with open(output_filename, 'w', newline='') as f:
         dict_writer = csv.DictWriter(f, fieldnames=dict_list[0].keys(),
                                      dialect=dialect)
         dict_writer.writeheader()
         dict_writer.writerows(dict_list)
     if verbose:
-        print 'Wrote %s' % output_filename
+        print('Wrote %s' % output_filename)
 
 
 def parse_args():
