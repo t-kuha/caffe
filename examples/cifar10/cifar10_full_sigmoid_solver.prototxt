@@ -23,6 +23,6 @@ display: 100
 max_iter: 60000
 # snapshot intermediate results
 snapshot: 10000
-snapshot_prefix: "examples/cifar10_full_sigmoid"
+snapshot_prefix: "examples/cifar10/cifar10_full_sigmoid"
 # solver mode: CPU or GPU
 solver_mode: GPU
